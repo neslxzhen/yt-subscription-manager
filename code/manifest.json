@@ -1,12 +1,37 @@
 {
-  "manifest_version": 2,
-  "name": "yt-subscription-manager",
-  "version": "0.1",
-  "description": "Provides a subscription manager to allow users to manage subscriptions",
-  "content_scripts": [
-    {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["subscription-manager.js"]
-    }
-  ]
+	"manifest_version": 2,
+	"name": "yt-subscription-manager",
+	"version": "0.1",
+	"description": "Provides a subscription manager to allow users to manage subscriptions",
+	"background": {
+		"persistent": false,
+		"scripts": [
+			"background/background.js"
+		]
+	},
+	"browser_action": {
+		"default_title": "Some tooltip",
+		"default_popup": "popup/popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://www.youtube.com/*",
+				"http://localhost:3000/*"
+			],
+			"js": [
+				"thirdparty/jquery-3.5.1.min.js",
+				"thirdparty/underscore-min.js",
+				"content/script.js"
+			]
+		}
+	],
+	"web_accessible_resources":[
+		"content/side_bar.ejs"
+	],
+	"permissions": [
+		"fontSettings",
+		"storage",
+		"tabs"
+	]
 }

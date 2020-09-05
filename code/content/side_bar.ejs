@@ -1,0 +1,28 @@
+<!-- TODO: delete auto annotation: css-build:shady -->
+
+<!-- @ytd-guide-section-renderer -->
+<div class="style-scope ytd-guide-renderer" style="height: 200px;" mini-guide-visible>
+    <h3 class="style-scope ytd-guide-section-renderer">
+        <!--@yt-formatted-string -->
+        <span id="guide-section-title" class="style-scope ytd-guide-section-renderer">YT Manager
+        </span>
+    </h3>
+    <div id="items" class="style-scope ytd-guide-section-renderer">
+        <!-- @ytd-guide-entry-renderer -->
+        <% _(group_meta).each(function(meta,key,list) { %>
+        <div class="style-scope ytd-guide-section-renderer">
+            <a id="endpoint" class="yt-simple-endpoint style-scope ytd-guide-entry-renderer" title="<%= key %>" href="#">
+                <paper-item class="style-scope ytd-guide-entry-renderer">
+                    <!-- @yt-icon and more-->
+                    <yt-img-shadow height="24" width="24" class="style-scope ytd-guide-entry-renderer no-transition"
+                        style="background-color: transparent;" loaded="">
+                        <img id="img" class="style-scope yt-img-shadow" height="24" width="24"
+                            src="https://yt3.ggpht.com/a/AATXAJyvRMSiyJMVIaPi-2UdgQj5rE0nt8cx_TYKUzAVag=s88-c-k-c0xffffffff-no-rj-mo">
+                    </yt-img-shadow>
+                    <span class="title style-scope ytd-guide-entry-renderer"><%= key %></span>
+                </paper-item>
+            </a>
+        </div>
+        <% }) %>
+    </div>
+</div>
