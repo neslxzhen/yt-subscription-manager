@@ -2,35 +2,79 @@
 
 let fake_data={
     "group":{
-        "asmr": [
-            "UCzGEGjOCbgv9z9SF71QyI7g",
-            "UCue0AhOm8SARARIcT-0mE1w",
-            "UCAtFkapSeoEGPxm5bC3tvaw"
-        ],
-        "independent": [
-            "UCyhTOPmMeUL4inFgjaA4QxA",
-            "UCYAyQjEhGHKARXnZe0U__9g",
-            "UCti3hdusePVagC6ZTXhJEow"
-        ],
-        "pop asia": [
-            "UCqEfdEvLG5oQWNYlDQrGlKw",
-            "UCneusl3ljZ-874Wgra8_zhw",
-            "UC5Hi7VYG79vR8TOT4isIDiw",
-            "UCrDkAvwZum-UTjHmzDI2iIw"
-        ]
+        "1": ["1","2","3"],
+        "2": ["4","5","6"],
+        "3": ["7","8", "9","10" ]
     },
     "group_meta":{
-        "asmr": {
+        "1": {
+            "title":"asmr",
             "img": "chrome-extension://kdmnjgijlmjgmimahnillepgcgeemffb/icon/new_pack/_13.png"
         },
-        "independent": {
+        "2": {
+            "title":"independent",
             "img": "chrome-extension://kdmnjgijlmjgmimahnillepgcgeemffb/icon/new_pack/_26.png"
         },
-        "pop asia": {
+        "3": {
+            "title":"pop asia",
             "img": "chrome-extension://kdmnjgijlmjgmimahnillepgcgeemffb/icon/new_pack/_3.png"
+        },
+    },
+    "channel_metas":{
+        "1":{
+            "title":"asmr zeitgeist",
+            "path":"/channel/UCzGEGjOCbgv9z9SF71QyI7g",
+            "img_id":"AATXAJzpQj0UtKIF0lOGe0XyWkNUcl0xwozNsEfQqvTC-g"
+        },
+        "2":{
+            "title":"Hatomugi ASMR",
+            "path":"/channel/UCue0AhOm8SARARIcT-0mE1w",
+            "img_id":"AATXAJxPdSyuiI3GBvOwwzX8y5xE8gc88n4-TxF5FbYP7A"
+        },
+        "3":{
+            "title":"ASMR PPOMO",
+            "path":"/channel/UCAtFkapSeoEGPxm5bC3tvaw",
+            "img_id":"AATXAJzZCyxDOZU2a9TLqkeBpW_NWfodZjRafGbUNZnHnQ"
+        },
+        "4":{
+            "title":"好樂團 GoodBand",
+            "path":"/channel/UCyhTOPmMeUL4inFgjaA4QxA",
+            "img_id":"AATXAJxQ5j9kwcGaltx5nfFoayRgmD4r_VAJFlbtTN2lrA"
+        },
+        "5":{
+            "title":"No Party For Cao Dong 草東沒有派對",
+            "path":"/channel/UCYAyQjEhGHKARXnZe0U__9g",
+            "img_id":"AATXAJyZRsmz_KJCFyk1CxcSLnYmI6bvfxBnIjt2GO2s"
+        },
+        "6":{
+            "title":"Vast&Hazy",
+            "path":"/channel/UCti3hdusePVagC6ZTXhJEow",
+            "img_id":"AATXAJx5SpijicRmaBlhxjudE7kZZ-O6EgZPixKGJ9Pg"
+        },
+        "7":{
+            "title":"The Arcadium",
+            "path":"/channel/UCqEfdEvLG5oQWNYlDQrGlKw",
+            "img":""
+        },
+        "8":{
+            "title":"TheFatRat",
+            "path":"/channel/UCneusl3ljZ-874Wgra8_zhw",
+            "img":"AATXAJy2VvrRvyg29dm8yMGTNzZzu73YK3ZBBtSwhOdI"
+        },
+        "9":{
+            "title":"MDD 麻吉弟弟",
+            "path":"/channel/UC5Hi7VYG79vR8TOT4isIDiw",
+            "img":"AATXAJwLj4r8UV1vWXrhziz2sJOJ3f7T1aSLZknyMK6v7w"
+        },
+        "10":{
+            "title":"Tobu",
+            "path":"/channel/UCrDkAvwZum-UTjHmzDI2iIw",
+            "img":"AATXAJyUfP93aN3_u6aUl9u2gMqiWhxc3nRJl41TjwaaZg"
         },
     }
 }
+
+$(start);
 
 function start() {
     chrome.storage.sync.get({
@@ -42,12 +86,23 @@ function start() {
 
 function installSideBar(config){
     let arr=config.side_sections;
-    let v = $("#guide-renderer #sections")
-    let y=v.children('ytd-guide-section-renderer:nth-child(1)')
 
     $.get(chrome.runtime.getURL("content/side_bar.ejs"), function(template){
-        y.after(_.template(template)(fake_data))
-    } );
-}
+        $("#guide-renderer #sections ytd-guide-section-renderer:nth-child(1)").after(_.template(template)(fake_data))
 
-$(start);
+        // add click Listener 
+        for(let i in fake_data['group_meta']){
+            $('div#nesl a#group-'+i).click(function(){
+                let child=$('div#nesl a#group-'+i+'-children');
+                if(child.css("display") == "none"){
+                    child.css("display","block");
+                }else{
+                    child.css("display","none");
+                }
+                console.log(i);
+            })
+        }
+
+        // TODO: notify https://www.youtube.com/feed/subscriptions
+    });
+}

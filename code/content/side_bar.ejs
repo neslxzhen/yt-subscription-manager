@@ -1,7 +1,7 @@
 <!-- TODO: delete auto annotation: css-build:shady -->
 
 <!-- @ytd-guide-section-renderer -->
-<div class="style-scope ytd-guide-renderer" style="height: 200px;" mini-guide-visible>
+<div id="nesl" class="style-scope" mini-guide-visible>
     <h3 class="style-scope ytd-guide-section-renderer">
         <!--@yt-formatted-string -->
         <span id="guide-section-title" class="style-scope ytd-guide-section-renderer">YT Manager
@@ -11,18 +11,34 @@
         <!-- @ytd-guide-entry-renderer -->
         <% _(group_meta).each(function(meta,key,list) { %>
         <div class="style-scope ytd-guide-section-renderer">
-            <a id="endpoint" class="yt-simple-endpoint style-scope ytd-guide-entry-renderer" title="<%= key %>" href="#">
+            <a id="group-<%= key %>" class="yt-simple-endpoint style-scope ytd-guide-entry-renderer"
+                title="<%= meta['title'] %>">
                 <paper-item class="style-scope ytd-guide-entry-renderer">
                     <!-- @yt-icon and more-->
                     <yt-img-shadow height="24" width="24" class="style-scope ytd-guide-entry-renderer no-transition"
                         style="background-color: transparent;" loaded="">
                         <img id="img" class="style-scope yt-img-shadow" height="24" width="24"
-                            src="https://yt3.ggpht.com/a/AATXAJyvRMSiyJMVIaPi-2UdgQj5rE0nt8cx_TYKUzAVag=s88-c-k-c0xffffffff-no-rj-mo">
+                            src="<%= meta['img'] %>">
                     </yt-img-shadow>
-                    <span class="title style-scope ytd-guide-entry-renderer"><%= key %></span>
+                    <span class="title style-scope ytd-guide-entry-renderer"><%= meta["title"] %></span>
                 </paper-item>
             </a>
+            <% _(group[key]).each(function(item_key) { 
+                let channel=channel_metas[item_key];    
+            %>
+            <a id="group-<%= key %>-children" class="yt-simple-endpoint style-scope ytd-guide-entry-renderer"
+                title="<%= channel['title'] %>" style="display:none"
+                href="<%= channel['path'] %>/videos">
+                <paper-item class="style-scope ytd-guide-entry-renderer">
+                    <!-- @yt-icon and more-->
+                    <img id="img" class="style-scope yt-img-shadow ytd-guide-entry-renderer" height="24" width="24"
+                            src="https://yt3.ggpht.com/a/<%= channel['img_id'] %>=s88-c-k-c0xffffffff-no-rj-mo">
+                    <span class="title style-scope ytd-guide-entry-renderer"><%= channel['title'] %></span>
+                </paper-item>
+            </a>
+            <% }) %>
         </div>
+
         <% }) %>
     </div>
 </div>
