@@ -82,6 +82,7 @@ function start() {
         favoriteColor: 'red',
         likesColor: true
     }, installSideBar);
+    installButtons();
 }
 
 function installSideBar(config) {
@@ -92,8 +93,8 @@ function installSideBar(config) {
 
         // add click Listener 
         for (let i in fake_data['group_meta']) {
-            $('div#nesl a#group-' + i).click(function () {
-                let child = $('div#nesl a#group-' + i + '-children');
+            $('div#side_bar a#group-' + i).click(function () {
+                let child = $('div#side_bar a#group-' + i + '-children');
                 if (child.css("display") == "none") {
                     child.css("display", "block");
                 } else {
@@ -107,3 +108,48 @@ function installSideBar(config) {
     });
 }
 
+function installDialog(){
+
+}
+
+function installButtons() {
+    $('div#subscribe-button ytd-subscribe-button-renderer').append(
+        `<paper-button class="add-to-collection-button style-scope ytd-subscribe-button-renderer" role="button" >
+        HEHE
+        </paper-button>`
+    )
+    $('paper-button.add-to-collection-button').click(function () {
+        // 布幕
+        $('body').append(
+            `<iron-overlay-backdrop style="z-index: 2201;" class="opened"></iron-overlay-backdrop>`
+        )
+        $('iron-overlay-backdrop').click(function () {
+            disableOverlay()
+        })
+
+        $.get(chrome.runtime.getURL("content/add-to-collection.ejs"), function (template) {
+            $("ytd-popup-container").append(_.template(template)(fake_data['group_meta']))
+            
+            // create Playlist
+            $(".ytd-add-to-playlist-renderer .ytd-add-to-playlist-create-renderer a.ytd-compact-link-renderer").click(function(){
+                $(this).hide()
+                $('#create-playlist-form #name-input').show()
+                $('#create-playlist-form #actions').show()
+            })
+            $('paper-button#ytd-add-to-playlist-create-button').click(function(){
+                createPlaylist()
+            })
+        });
+    })
+    
+}
+
+function createPlaylist(){
+    $("div#add_to_collection input.paper-input")
+    disableOverlay()
+}
+
+function disableOverlay(){
+    $('iron-overlay-backdrop').removeClass("opened")
+    $("div#add_to_collection").remove()
+}

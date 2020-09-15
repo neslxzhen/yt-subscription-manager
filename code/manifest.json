@@ -27,7 +27,8 @@
 		}
 	],
 	"web_accessible_resources":[
-		"content/side_bar.ejs"
+		"content/side_bar.ejs",
+		"content/add-to-collection.ejs"
 	],
 	"permissions": [
 		"fontSettings",
