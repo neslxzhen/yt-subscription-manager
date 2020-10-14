@@ -74,19 +74,55 @@ let fake_data = {
     }
 }
 
-$(start);
+start()
 
 function start() {
-    chrome.storage.sync.get({
-        // default config
-        favoriteColor: 'red',
-        likesColor: true
-    }, installSideBar);
-    installButtons();
+    // chrome.storage.sync.get({
+    //     // default config
+    //     favoriteColor: 'red',
+    //     likesColor: true
+    // }, installSideBar);
+    observeSideBar();
+
+    let url = window.location.toString()
+    if (url.match(/https:\/\/www\.youtube\.com\/watch\?v=\w+/) ||
+        url.match(/https:\/\/www\.youtube\.com\/c\/.+/) ||
+        url.match(/https:\/\/www\.youtube\.com\/channel\/.+/)
+    ) {
+        $("#primary #primary-inner #meta #subscribe-button").ready(() => {
+            console.log('observe-Buttons ready')
+            installButtons()
+        });
+    }
+
 }
 
-function installSideBar(config) {
-    let arr = config.side_sections;
+function observeSideBar() {
+    let observer = new MutationObserver((mutations, observer) => {
+        mutations.every(function (mutation) {
+            if (mutation.target.querySelector('ytd-guide-section-renderer') !== null) {
+                putSideBar()
+                observer.disconnect();
+                return false
+            }
+        });
+
+    });
+
+    // Sometimes components cannot be found
+    // script.js:152 Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+    $("#guide-inner-content.ytd-app").ready(() => {
+        console.log('observe-SideBar ready')
+        observer.observe($("#guide-inner-content.ytd-app")[0], {
+            childList: true,
+            subtree: true,
+        });
+    });
+
+
+}
+
+function putSideBar() {
 
     $.get(chrome.runtime.getURL("content/side_bar.ejs"), function (template) {
         $("#guide-renderer #sections ytd-guide-section-renderer:nth-child(1)").after(_.template(template)(fake_data))
@@ -100,15 +136,12 @@ function installSideBar(config) {
                 } else {
                     child.css("display", "none");
                 }
-                console.log(i);
             })
         }
-
-        // TODO: notify https://www.youtube.com/feed/subscriptions
     });
 }
 
-function installDialog(){
+function installDialog() {
 
 }
 
@@ -129,27 +162,27 @@ function installButtons() {
 
         $.get(chrome.runtime.getURL("content/add-to-collection.ejs"), function (template) {
             $("ytd-popup-container").append(_.template(template)(fake_data['group_meta']))
-            
+
             // create Playlist
-            $(".ytd-add-to-playlist-renderer .ytd-add-to-playlist-create-renderer a.ytd-compact-link-renderer").click(function(){
+            $(".ytd-add-to-playlist-renderer .ytd-add-to-playlist-create-renderer a.ytd-compact-link-renderer").click(function () {
                 $(this).hide()
                 $('#create-playlist-form #name-input').show()
                 $('#create-playlist-form #actions').show()
             })
-            $('paper-button#ytd-add-to-playlist-create-button').click(function(){
+            $('paper-button#ytd-add-to-playlist-create-button').click(function () {
                 createPlaylist()
             })
         });
     })
-    
+
 }
 
-function createPlaylist(){
+function createPlaylist() {
     $("div#add_to_collection input.paper-input")
     disableOverlay()
 }
 
-function disableOverlay(){
+function disableOverlay() {
     $('iron-overlay-backdrop').removeClass("opened")
     $("div#add_to_collection").remove()
 }
